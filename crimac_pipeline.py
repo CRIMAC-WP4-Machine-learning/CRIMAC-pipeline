@@ -20,19 +20,16 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
 
 # Get the core functions
-import batch_core
+from batch_core import Pipeline
 
-# Get the configuration
-import batch_config
+# Get All sandeel surveys (code series 13)
+pipeline = Pipeline()
 
-
-# Get All sandeel survey (code series 13)
-client = init_docker()
-cruise_list = extract_cruise_series("cruiseseries.xml", 13)
-do_batch(cruise_list)
+cruise_list = Pipeline.extract_cruise_series("cruiseseries.xml", 13)
+pipeline.do_batch(cruise_list)
 
 
-# This script is the starting point for a working CRIMAC pipeline. The different steps can 
+# This script is the starting point for a working CRIMAC pipeline.
 
 # Read cruise series
 #cs=extract_cruise_series?
@@ -55,4 +52,3 @@ do_batch(cruise_list)
 # Integration step
 #for cruise in cruiseseries
 #   integrate(cruise)
-
