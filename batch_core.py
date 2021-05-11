@@ -22,7 +22,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from pathlib import Path, PurePath
 import xml.etree.ElementTree as ET
-import itertools
 import shutil
 import docker
 
@@ -38,6 +37,7 @@ class Pipeline:
         # Placeholder for the cruises
         target_cruises = []
         # Get the cruises for a series
+        target_cruises = {}
         for elem in root.findall('.//ns1:row/[ns1:code="'+ str(cruise_series_code) + '"]/ns1:samples/ns1:sample', ns):
             # Get the year information
             for subelem in elem.findall(".//ns1:sampleTime", ns):
@@ -52,7 +52,10 @@ class Pipeline:
                         if tag == "shipName":
                             ship_name = subsubelem.text
                     # Append to list
-                    target_cruises.append([year, cruise_no, ship_name])
+                    cruise_path = list(Path(config.ROOT_DIR + "/" + year).glob("*" + cruise_no.upper() + "*" + ship_name.upper() + "*"))
+                    if len(cruise_path) > 0:
+                        print(cruise_path)
+                        target_cruises[year] = [cruise_no, ship_name, cruise_path[0]]
         return target_cruises
 
     @classmethod
@@ -106,13 +109,6 @@ class Pipeline:
                 elif header == b'XML':
                     raw_type = 'ek80'
         return {'path': str(path), 'raw_type': raw_type}
-
-    @classmethod
-    def gen_path_list(cls, cruise_list):
-        paths = []
-        for year, cruise_no, ship_name in cruise_list:
-            paths.append(Path(config.ROOT_DIR + "/" + year).glob("*" + cruise_no.upper() + "*" + ship_name.upper() + "*"))
-        return(paths)
 
     @classmethod
     def get_ext_data_type(cls, data_type):
@@ -234,7 +230,17 @@ class Pipeline:
         for line in process:
             print(line)
 
-    def do_preprocessing(self, target, prefix, grid_data_type, process_ek80, overwrite):
+    @classmethod
+    def gen_prefix(cls, output_prefix, p):
+        # Check if prefix none or "" get the cruise number as the output_prefix
+        if output_prefix is None or output_prefix == "":
+            prefix, _, _ = p.name.partition('_')
+        else:
+            prefix = output_prefix
+        return prefix
+
+    def do_preprocessing(self, target, prefix, grid_data_type, process_ek80, overwrite = False):
+        prefix = self.gen_prefix(prefix, target)
         print("\n\nTrying to do pre-processing (gridding) for " + str(target))
         raw_data = self.check_raw_data(target)
         # Check data sanity
@@ -266,6 +272,7 @@ class Pipeline:
         return False
 
     def do_prediction(self, target, prefix, grid_data_type, overwrite = False):
+        prefix = self.gen_prefix(prefix, target)
         print("\n\nTrying to do prediction for " + str(target))
         if (target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR).exists():
             # Get extension
@@ -283,6 +290,7 @@ class Pipeline:
         return False
 
     def do_bottom_detection(self, target, prefix, algorithm, grid_data_type, overwrite = False):
+        prefix = self.gen_prefix(prefix, target)
         print("\n\nTrying to do bottom detection for " + str(target))
         if (target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR).exists():
             # Get extension
@@ -301,14 +309,8 @@ class Pipeline:
         print("ERROR: Gridded data not found! Please do preprocessing first.")
         return False
 
-    def do_batch(self, cruise_list, output_prefix = None, grid_data_type = 'zarr', bottom_detection_algorithm = "simple", process_ek80 = False, overwrite = False):
-        paths = self.gen_path_list(cruise_list)
-        for p in itertools.chain(*paths):
-            # Check if prefix none or "" get the cruise number as the output_prefix
-            if output_prefix is None or output_prefix == "":
-                prefix, _, _ = p.name.partition('_')
-            else:
-                prefix = output_prefix
+    def do_batch(self, cruise_list, prefix = None, grid_data_type = 'zarr', bottom_detection_algorithm = "simple", process_ek80 = False, overwrite = False):
+        for year, cruise_no, ship_name, p in cruise_list:
             print("Starting batch processing of cruise " + prefix)
             self.do_preprocessing(p, prefix, grid_data_type, process_ek80, overwrite)
             self.do_prediction(p, prefix, overwrite)

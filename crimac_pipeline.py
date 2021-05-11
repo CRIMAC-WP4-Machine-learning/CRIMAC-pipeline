@@ -26,29 +26,28 @@ from batch_core import Pipeline
 pipeline = Pipeline()
 
 cruise_list = Pipeline.extract_cruise_series("cruiseseries.xml", 13)
-pipeline.do_batch(cruise_list)
+print(cruise_list)
 
+# Select a cruise
+selected_cruise = [cruise_list['2019']]
 
-# This script is the starting point for a working CRIMAC pipeline.
+# Select all cruises
+#selected_cruise = cruise_list.values()
 
-# Read cruise series
-#cs=extract_cruise_series?
-
-# Choose cruise series to process
-#cruiseseries = cs[1]
+print(selected_cruise)
 
 # Preprocess data
-#for cruise in cruiseseries
-#   preprocess_data(cruise)
+for _, _, p in selected_cruise:
+    pipeline.do_preprocessing(p, prefix = None, grid_data_type = 'zarr', process_ek80 = True)
+
+# U-net prediction
+for _, _, p in selected_cruise:
+    pipeline.do_prediction(p, prefix = None, grid_data_type = 'zarr')
 
 # Bottom classification
-#for cruise in cruiseseries
-#   preprocess_data(cruise)
+for _, _, p in selected_cruise:
+    pipeline.do_bottom_detection(p, prefix = None, algorithm = 'simple', grid_data_type = 'zarr')
 
-# Bottom classification
-#for cruise in cruiseseries
-#   preprocess_data(cruise)
-
-# Integration step
-#for cruise in cruiseseries
-#   integrate(cruise)
+# Integration
+#for _, _, p in selected_cruise:
+#    pipeline.do_integration(
