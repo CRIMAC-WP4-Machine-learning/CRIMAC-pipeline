@@ -10,5 +10,5 @@ BOTTOM_DATA_DIR = "BOTTOM_DATA"
 
 # Docker images
 BOTTOMDETECTION_IMAGE = 'crimac/bottomdetection'
-PREDICTOR_IMAGE = 'crimac/predictor'
+PREDICTOR_IMAGE = 'crimac/unet'
 PREPROCESSOR_IMAGE = 'crimac/preprocessor'
