@@ -50,7 +50,7 @@ class Pipeline:
                         if tag == "cruisenr":
                             cruise_no = subsubelem.text
                         if tag == "shipName":
-                            ship_name = subsubelem.text
+                            ship_name = ''.join([i for i in subsubelem.text if i.isalpha()])
                     # Append to list
                     cruise_path = list(Path(config.ROOT_DIR + "/" + year).glob("*" + cruise_no.upper() + "*" + ship_name.upper() + "*"))
                     if len(cruise_path) > 0:
