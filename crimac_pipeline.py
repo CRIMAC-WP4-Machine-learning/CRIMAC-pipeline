@@ -29,10 +29,10 @@ cruise_list = Pipeline.extract_cruise_series("cruiseseries.xml", 13)
 print(cruise_list)
 
 # Select a cruise
-selected_cruise = [cruise_list['2019']]
+#selected_cruise = [cruise_list['2019']]
 
 # Select all cruises
-#selected_cruise = cruise_list.values()
+selected_cruise = cruise_list.values()
 
 print(selected_cruise)
 
