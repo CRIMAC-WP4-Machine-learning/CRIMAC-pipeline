@@ -38,7 +38,8 @@ class Pipeline:
         target_cruises = []
         # Get the cruises for a series
         target_cruises = {}
-        for elem in root.findall('.//ns1:row/[ns1:code="'+ str(cruise_series_code) + '"]/ns1:samples/ns1:sample', ns):
+        for elem in root.findall('.//ns1:row/[ns1:code="'+ str(cruise_series_code)
+                    + '"]/ns1:samples/ns1:sample', ns):
             # Get the year information
             for subelem in elem.findall(".//ns1:sampleTime", ns):
                 year = subelem.text
@@ -52,7 +53,8 @@ class Pipeline:
                         if tag == "shipName":
                             ship_name = ''.join([i for i in subsubelem.text if i.isalpha()])
                     # Append to list
-                    cruise_path = list(Path(config.ROOT_DIR + "/" + year).glob("*" + cruise_no.upper() + "*" + ship_name.upper() + "*"))
+                    cruise_path = list(Path(config.ROOT_DIR + "/" + year)
+                                    .glob("*" + cruise_no.upper() + "*" + ship_name.upper() + "*"))
                     if len(cruise_path) > 0:
                         print(cruise_path)
                         target_cruises[year] = [cruise_no, ship_name, cruise_path[0]]
@@ -113,117 +115,35 @@ class Pipeline:
     @classmethod
     def get_ext_data_type(cls, data_type):
         if data_type == "zarr":
-            return("zarr")
+            return "zarr"
         if data_type == "netcdf4":
-            return("nc")
-        return(None)
+            return "nc"
+        return None
 
-    def launch_bottom_classifier(self, datain, dataout, algorithm, in_name, out_name):
+    def launch_docker(self, image_tag, mount_list, environments, use_nvidia = False):
         '''
-        Launch bottom classifier image
+        Launch docker
 
         Parameters:
-            datain (str)         : Directory path of the RAW files.
-            dataout (str)        : Output directory.
-            algorithm (str)      : Bottom classifier algorithm.
-            in_name (str)        : Input data filename.
-            out_namee (str)      : Output data filename.
-
+            image_tag (str)    : Image name to run.
+            mount_list (str)   : Mount list.
+            environments (str) : Environment list.
         '''
 
-        mount_list = {
-            datain: {'bind': '/in_dir', 'mode': 'rw'},
-            dataout: {'bind': '/out_dir', 'mode': 'rw'}
-        }
-        environments = [
-            "INPUT_NAME=" + in_name,
-            "OUTPUT_NAME=" + out_name,
-            "ALGORITHM=" + algorithm
-        ]
         print(environments)
         print(mount_list)
-        container = self.client.containers.run(config.BOTTOMDETECTION_IMAGE,
+
+        if use_nvidia:
+            rt = "nvidia"
+        else:
+            rt = "docker"
+
+        container = self.client.containers.run(image_tag,
                 detach = True,
                 auto_remove = True,
                 volumes=mount_list,
                 environment=environments,
-        )
-        process = container.logs(stream=True, follow=True)
-        print('Stream logging the container..')
-        for line in process:
-            print(line)
-
-    def launch_unet_classifier(self, datain, dataout, model, prefix, grid_data_type):
-        '''
-        Launch unet classifier image to do preprocessing
-
-        Parameters:
-            datain (str)         : Directory path of the RAW files.
-            dataout (str)        : Output directory.
-            model (str)          : Directory path of the model files.
-            prefix (str)         : Name of the output data.
-            grid_data_type (str) : Output type, can be either 'zarr' or 'netcdf4'.
-
-        '''
-
-        # If input is netcdf
-        if grid_data_type == "netcdf4":
-            print("ERROR for now!")
-
-        mount_list = {
-            datain: {'bind': '/datain', 'mode': 'rw'},
-            model: {'bind': '/model', 'mode': 'rw'},
-            dataout: {'bind': '/dataout', 'mode': 'rw'}
-        }
-        environments = [
-            "OUTPUT_NAME=" + prefix,
-        ]    
-        print(environments)
-        print(mount_list)
-        container = self.client.containers.run(config.PREDICTOR_IMAGE,
-                detach = True,
-                auto_remove = True,
-                volumes=mount_list,
-                environment=environments,
-                runtime="nvidia"
-        )
-        process = container.logs(stream=True, follow=True)
-        print('Stream logging the container..')
-        for line in process:
-            print(line)
-
-    def launch_preprocessing(self, datain, datawork, dataout, prefix, grid_data_type):
-        '''
-        Launch docker preprocessor image to do preprocessing
-
-        Parameters:
-            datain (str)         : Directory path of the RAW files.
-            datawork (str)       : Directory path of the LSSS WORK files.
-            dataout (str)        : Output directory.
-            prefix (str)         : Name of the output data.
-            grid_data_type (str) : Output type, can be either 'zarr' or 'netcdf4'.
-
-        '''
-
-        mount_list = {
-            datain: {'bind': '/datain', 'mode': 'rw'},
-            datawork: {'bind': '/workin', 'mode': 'rw'},
-            dataout: {'bind': '/dataout', 'mode': 'rw'}
-        }
-        environments = [
-            "OUTPUT_TYPE=" + grid_data_type,
-            "MAIN_FREQ=38000", 
-            "MAX_RANGE_SRC=500",
-            "OUTPUT_NAME=" + prefix,
-            "WRITE_PNG=0",
-        ]
-        print(environments)
-        print(mount_list)
-        container = self.client.containers.run(config.PREPROCESSOR_IMAGE,
-                detach = True,
-                auto_remove = True,
-                volumes=mount_list,
-                environment=environments,
+                runtime = rt,
         )
         process = container.logs(stream=True, follow=True)
         print('Stream logging the container..')
@@ -239,121 +159,227 @@ class Pipeline:
             prefix = output_prefix
         return prefix
 
-    def do_preprocessing(self, target, prefix, grid_data_type, process_ek80, overwrite = False):
-        prefix = self.gen_prefix(prefix, target)
+    def do_preprocessing(self, target):
         print("\n\nTrying to do pre-processing (gridding) for " + str(target))
         raw_data = self.check_raw_data(target)
         # Check data sanity
         if raw_data['raw_type'] is None or raw_data['path'] is None:
             print("ERROR: Invalid RAW data found!")
-            return(False)
+            return False
         # Check EK80 data
-        if raw_data['raw_type'] == "ek80" and not process_ek80:
+        if raw_data['raw_type'] == "ek80" and not config.PREPROCESSOR_PROCESS_EK80:
             print("Not processing EK80 data.")
-            return(False)
+            return False
         #print(target / raw_data['path'])
         if (target / raw_data['path']).exists():
-            # Get extension
-            ext = self.get_ext_data_type(grid_data_type)
+            # Data input
             datain = target / raw_data['path']
-            dataout = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
             datawork = target / config.FIRST_LEVEL_DIR / "LSSS" / "WORK"
-            target_file = dataout / str(prefix + "." + ext)
-            target_file_work = dataout / str(prefix + "_work.parquet")
+
             # Make necessary directory and whether to overwrite files
-            self.check_create_dir(dataout)
-            proceed = self.check_overwrite_file(target_file, overwrite)
-            self.check_overwrite_file(target_file_work, overwrite)
+            self.check_create_dir(self.preprocessor_out_dir)
+            proceed = self.check_overwrite_file(self.preprocessor_out_path, config.PREPROCESSOR_OVERWRITE)
+            self.check_overwrite_file(self.preprocessor_work_path, config.PREPROCESSOR_OVERWRITE)
+
+            # Prepare docker
+            image_tag = config.PREPROCESSOR_IMAGE
+            mount_list = {
+                datain: {'bind': '/datain', 'mode': 'r'},
+                datawork: {'bind': '/workin', 'mode': 'r'},
+                self.preprocessor_out_dir: {'bind': '/dataout', 'mode': 'rw'}
+            }
+            environments = [
+                "OUTPUT_NAME=" + self.preprocessor_out_name,
+                "OUTPUT_TYPE=" + config.PREPROCESSOR_OUT_TYPE,
+                "MAIN_FREQ=" + config.PREPROCESSOR_MAIN_FREQ,
+                "MAX_RANGE_SRC=" + config.PREPROCESSOR_MAX_RANGE_SRC,
+                "WRITE_PNG=" + config.PREPROCESSOR_IMAGE
+            ]
             if proceed:
-                self.launch_preprocessing(str(datain), str(datawork), str(dataout), prefix, grid_data_type)
+                self.launch_docker(image_tag, mount_list, environments)
                 return True
             return False
         print("ERROR: RAW data not found!")
         return False
 
-    def do_prediction(self, target, prefix, grid_data_type, overwrite = False):
-        prefix = self.gen_prefix(prefix, target)
+    def do_prediction(self, target):
         print("\n\nTrying to do prediction for " + str(target))
-        if (target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR).exists():
-            # Get extension
-            ext = self.get_ext_data_type(grid_data_type)
-            datain = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
-            dataout = target / config.FIRST_LEVEL_DIR / config.PREDICTION_DATA_DIR
-            target_file_pred = dataout / str(prefix + "_pred.zarr")
-            self.check_create_dir(dataout)
-            proceed = self.check_overwrite_file(target_file_pred, overwrite)
+        if (self.preprocessor_out_path).exists():
+            self.check_create_dir(self.predictor_out_dir)
+            proceed = self.check_overwrite_file(self.predictor_out_path, config.PREDICTOR_OVERWRITE)
+
+            # Prepare docker
+            image_tag = config.PREDICTOR_IMAGE
+            # If input is netcdf
+            if self.preprocessor_out_ext != "zarr":
+                print("ERROR for now!")
+
+            mount_list = {
+                self.preprocessor_out_dir: {'bind': '/datain', 'mode': 'r'},
+                self.predictor_out_dir: {'bind': '/dataout', 'mode': 'rw'},
+                self.predictor_model_path: {'bind': '/model', 'mode': 'r'}
+            }
+            environments = [
+                "OUTPUT_NAME=" + self.predictor_out_name,
+            ]
             if proceed:
-                self.launch_unet_classifier(str(datain), str(dataout), model =  "/scratch/disk2/AzureMirror/models/NR_Unet", prefix = prefix, grid_data_type = grid_data_type)
+                self.launch_docker(image_tag, mount_list, environments, config.PREDICTOR_USE_CUDA)
                 return True
             return False
         print("ERROR: Gridded data not found! Please do preprocessing first.")
         return False
 
-    def do_bottom_detection(self, target, prefix, algorithm, grid_data_type, overwrite = False):
-        prefix = self.gen_prefix(prefix, target)
+    def do_bottom_detection(self, target):
         print("\n\nTrying to do bottom detection for " + str(target))
-        if (target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR).exists():
+        if (self.preprocessor_out_path).exists():
             # Get extension
-            ext = self.get_ext_data_type(grid_data_type)
-            datain = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
-            dataout = target / config.FIRST_LEVEL_DIR / config.BOTTOM_DATA_DIR
-            in_name = prefix + "." + ext
-            out_name = str(prefix + "_pred_bottom.zarr")
-            target_file = dataout / out_name
-            self.check_create_dir(dataout)
-            proceed = self.check_overwrite_file(target_file, overwrite)
+            self.check_create_dir(self.bottomdetection_out_dir)
+            proceed = self.check_overwrite_file(self.bottomdetection_out_path, config.BOTTOMDETECTION_OVERWRITE)
+
+            # Prepare docker
+            image_tag = config.BOTTOMDETECTION_IMAGE
+
+            mount_list = {
+                self.preprocessor_out_dir: {'bind': '/in_dir', 'mode': 'rw'},
+                self.bottomdetection_out_dir: {'bind': '/out_dir', 'mode': 'rw'}
+            }
+
+            environments = [
+                "INPUT_NAME=" + self.preprocessor_out_name,
+                "OUTPUT_NAME=" + self.bottomdetection_out_name,
+                "ALGORITHM=" + config.BOTTOMDETECTION_ALGORITHM,
+                "PARAMETER_minimum_range=" + config.BOTTOMDETECTION_PARAMETER_MINIMUM_RANGE,
+                "PARAMETER_offset=" + config.BOTTOMDETECTION_PARAMETER_OFFSET,
+                "PARAMETER_threshold_log_sv=" + config.BOTTOMDETECTION_PARAMETER_THRESHOLD_LOG_SV
+            ]
+
             if proceed:
-                self.launch_bottom_classifier(str(datain), str(dataout), algorithm, in_name, out_name)
+                self.launch_docker(image_tag, mount_list, environments)
                 return True
             return False
         print("ERROR: Gridded data not found! Please do preprocessing first.")
         return False
 
-    def do_integration(self):
-	target = config.TARGET
-	prefix = self.gen_prefix(config.PREFIX, target)
+    def do_integration(self, target):
         print("\n\nTrying to do integration for " + str(target))
-        if (target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR).exists():
-            # Get extension
-            ext = self.get_ext_data_type(grid_data_type)
-            datain = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
-            dataout = target / config.FIRST_LEVEL_DIR / config.BOTTOM_DATA_DIR
-            in_name = prefix + "." + ext
-            out_name = str(prefix + "_pred_bottom.zarr")
-            target_file = dataout / out_name
-            self.check_create_dir(dataout)
-            proceed = self.check_overwrite_file(target_file, overwrite)
+        if (self.preprocessor_out_path).exists() and (self.bottomdetection_out_path).exists() and (self.predictor_out_path).exists():
+
+            # Prepare output
+            self.check_create_dir(self.integrator_out_dir)
+            proceed = self.check_overwrite_file(self.integrator_out_path, config.INTEGRATOR_OVERWRITE)
+            self.check_overwrite_file(self.integrator_png_path, config.INTEGRATOR_OVERWRITE)
+
+            # Prepare docker
+            image_tag = config.INTEGRATOR_IMAGE
+
+            mount_list = {
+                self.preprocessor_out_dir: {'bind': '/datain', 'mode': 'r'},
+                self.predictor_out_dir: {'bind': '/predin', 'mode': 'r'},
+                self.bottomdetection_out_dir: {'bind': '/botin', 'mode': 'r'},
+                self.integrator_out_dir: {'bind': '/dataout', 'mode': 'rw'}
+            }
+
+            environments = [
+                "DATA_INPUT_NAME=" + self.preprocessor_out_name,
+                "PRED_INPUT_NAME=" + self.predictor_out_name,
+                "BOT_INPUT_NAME=" + self.bottomdetection_out_name,
+                "OUTPUT_NAME=" + self.integrator_out_name,
+                "WRITE_PNG=" + self.integrator_png_name,
+                "THRESHOLD=" + config.INTEGRATOR_THRESHOLD,
+                "MAIN_FREQ=" + config.INTEGRATOR_MAIN_FREQ,
+                "MAX_RANGE_SRC=" + config.INTEGRATOR_MAX_RANGE_SRC,
+                "HOR_INTEGRATION_TYPE=" + config.INTEGRATOR_HOR_INTEGRATION_TYPE,
+                "HOR_INTEGRATION_STEP=" + config.INTEGRATOR_HOR_INTEGRATION_STEP,
+                "VERT_INTEGRATION_TYPE=" + config.INTEGRATOR_VERT_INTEGRATION_TYPE,
+                "VERT_INTEGRATION_STEP=" + config.INTEGRATOR_VERT_INTEGRATION_STEP,
+            ]
+
             if proceed:
-                self.launch_bottom_classifier(str(datain), str(dataout), algorithm, in_name, out_name)
+                self.launch_docker(image_tag, mount_list, environments)
                 return True
             return False
-        print("ERROR: Gridded data not found! Please do preprocessing first.")
+        print("ERROR: Either gridded data / bottom detection / u-net prediction data not found!")
         return False
 
+    def populate_paths(self, target, prefix):
+        # Init directories and output files
 
-        DATA_INPUT_NAME=input_filename.zarr
-	PRED_INPUT_NAME=prediction_filename.zarr
-	BOT_INPUT_NAME=bottom_filename.zarr
-	OUTPUT_NAME=result.zarr
-	WRITE_PNG=result.png
-	THRESHOLD=0.8
-	MAIN_FREQ = 38000
-	MAX_RANGE_SRC = 500
-	HOR_INTEGRATION_TYPE = ping
-	HOR_INTEGRATION_STEP = 100
-	VERT_INTEGRATION_TYPE=range
-	VERT_INTEGRATION_STEP=10
+        # Preprocessor
+        self.preprocessor_out_dir = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
+        self.preprocessor_out_ext = self.get_ext_data_type(config.PREPROCESSOR_OUT_TYPE)
+        self.preprocessor_out_name = str(prefix + "." + self.preprocessor_out_ext)
+        self.preprocessor_out_path = self.preprocessor_out_dir / self.preprocessor_out_name
 
+        self.preprocessor_work_name = str(prefix + "_work.parquet")
+        self.preprocessor_work_path = self.preprocessor_out_dir / self.preprocessor_work_name
 
-    def do_batch(self, cruise_list, prefix = None, grid_data_type = 'zarr', bottom_detection_algorithm = "simple", process_ek80 = False, overwrite = False):
-        for year, cruise_no, ship_name, p in cruise_list:
-            print("Starting batch processing of cruise " + prefix)
-            self.do_preprocessing(p, prefix, grid_data_type, process_ek80, overwrite)
-            self.do_prediction(p, prefix, overwrite)
-            self.do_bottom_detection(p, prefix, bottom_detection_algorithm, grid_data_type, overwrite)
+        # Bottom detection
+        self.bottomdetection_out_dir = target / config.FIRST_LEVEL_DIR / config.BOTTOM_DATA_DIR
+        self.bottomdetection_out_ext = self.get_ext_data_type(config.BOTTOMDETECTION_OUT_TYPE)
+        self.bottomdetection_out_name = str(prefix + "_pred_bottom" + "." + self.bottomdetection_out_ext)
+        self.bottomdetection_out_path = self.bottomdetection_out_dir / self.bottomdetection_out_name
+
+        # Predictor
+        self.predictor_model_path = config.PREDICTOR_MODEL_PATH
+
+        self.predictor_out_dir = target / config.FIRST_LEVEL_DIR / config.PREDICTOR_DATA_DIR
+        self.predictor_out_ext = self.get_ext_data_type(config.PREDICTOR_OUT_TYPE)
+        self.predictor_out_name = str(prefix + "_pred" + "." + self.predictor_out_ext)
+        self.predictor_out_path = self.predictor_out_dir / self.predictor_out_name
+
+        # Integrator
+        self.integrator_out_dir = target / config.FIRST_LEVEL_DIR / config.INTEGRATOR_DATA_DIR
+        self.integrator_out_ext = self.get_ext_data_type(config.INTEGRATOR_OUT_TYPE)
+        self.integrator_out_name = str(prefix + "_report" + "." + self.integrator_out_ext)
+        self.integrator_out_path = self.integrator_out_dir / self.integrator_out_name
+
+        self.integrator_png_name = str(prefix + "_report.png")
+        self.integrator_png_path = self.integrator_out_dir / self.integrator_png_name
+
+    def do_batch(self, cruise_list):
+        for _, _, _, p in cruise_list:
+            print("Starting batch processing of cruise " + p)
+            prefix = self.gen_prefix(config.GLOBAL_PREFIX, p)
+            self.populate_paths(p, prefix)
+            self.do_preprocessing(p)
+            self.do_prediction(p)
+            self.do_bottom_detection(p)
             print("\n")
 
     def __init__(self):
         # Init Docker
         self.client = docker.from_env()
-        # Process config (TODO)
+
+        # Init Paths
+
+        # Preprocessor
+        self.preprocessor_out_dir = None
+        self.preprocessor_out_ext = None
+        self.preprocessor_out_name = None
+        self.preprocessor_out_path = None
+
+        self.preprocessor_work_name = None
+        self.preprocessor_work_path = None
+
+        # Bottom detection
+        self.bottomdetection_out_dir = None
+        self.bottomdetection_out_ext = None
+        self.bottomdetection_out_name = None
+        self.bottomdetection_out_path = None
+
+        # Predictor
+        self.predictor_model_path = None
+
+        self.predictor_out_dir = None
+        self.predictor_out_ext = None
+        self.predictor_out_name = None
+        self.predictor_out_path = None
+
+        # Integrator
+        self.integrator_out_dir = None
+        self.integrator_out_ext = None
+        self.integrator_out_name = None
+        self.integrator_out_path = None
+
+        self.integrator_png_name = None
+        self.integrator_png_path = None
