@@ -298,7 +298,7 @@ class Pipeline:
             datain = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
             dataout = target / config.FIRST_LEVEL_DIR / config.BOTTOM_DATA_DIR
             in_name = prefix + "." + ext
-            out_name = str(prefix + "_pred_bottom.parquet")
+            out_name = str(prefix + "_pred_bottom.zarr")
             target_file = dataout / out_name
             self.check_create_dir(dataout)
             proceed = self.check_overwrite_file(target_file, overwrite)
