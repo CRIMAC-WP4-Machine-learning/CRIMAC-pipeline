@@ -188,8 +188,8 @@ class Pipeline:
             # Prepare docker
             image_tag = config.PREPROCESSOR_IMAGE
             mount_list = {
-                datain: {'bind': '/datain', 'mode': 'r'},
-                datawork: {'bind': '/workin', 'mode': 'r'},
+                datain: {'bind': '/datain', 'mode': 'ro'},
+                datawork: {'bind': '/workin', 'mode': 'ro'},
                 self.preprocessor_out_dir: {'bind': '/dataout', 'mode': 'rw'}
             }
             environments = [
@@ -219,9 +219,9 @@ class Pipeline:
                 print("ERROR for now!")
 
             mount_list = {
-                self.preprocessor_out_dir: {'bind': '/datain', 'mode': 'r'},
+                self.preprocessor_out_dir: {'bind': '/datain', 'mode': 'ro'},
                 self.predictor_out_dir: {'bind': '/dataout', 'mode': 'rw'},
-                self.predictor_model_path: {'bind': '/model', 'mode': 'r'}
+                self.predictor_model_path: {'bind': '/model', 'mode': 'ro'}
             }
             environments = [
                 "OUTPUT_NAME=" + self.predictor_out_name,
@@ -277,9 +277,9 @@ class Pipeline:
             image_tag = config.INTEGRATOR_IMAGE
 
             mount_list = {
-                self.preprocessor_out_dir: {'bind': '/datain', 'mode': 'r'},
-                self.predictor_out_dir: {'bind': '/predin', 'mode': 'r'},
-                self.bottomdetection_out_dir: {'bind': '/botin', 'mode': 'r'},
+                self.preprocessor_out_dir: {'bind': '/datain', 'mode': 'ro'},
+                self.predictor_out_dir: {'bind': '/predin', 'mode': 'ro'},
+                self.bottomdetection_out_dir: {'bind': '/botin', 'mode': 'ro'},
                 self.integrator_out_dir: {'bind': '/dataout', 'mode': 'rw'}
             }
 
