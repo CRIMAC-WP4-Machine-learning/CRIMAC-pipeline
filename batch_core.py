@@ -191,8 +191,8 @@ class Pipeline:
             environments = [
                 "OUTPUT_NAME=" + self.preprocessor_out_name,
                 "OUTPUT_TYPE=" + config.PREPROCESSOR_OUT_TYPE,
-                "MAIN_FREQ=" + config.PREPROCESSOR_MAIN_FREQ,
-                "MAX_RANGE_SRC=" + config.PREPROCESSOR_MAX_RANGE_SRC,
+                "MAIN_FREQ=" + str(config.PREPROCESSOR_MAIN_FREQ),
+                "MAX_RANGE_SRC=" + str(config.PREPROCESSOR_MAX_RANGE_SRC),
                 "WRITE_PNG=" + config.PREPROCESSOR_IMAGE
             ]
             if proceed:
@@ -248,9 +248,9 @@ class Pipeline:
                 "INPUT_NAME=" + self.preprocessor_out_name,
                 "OUTPUT_NAME=" + self.bottomdetection_out_name,
                 "ALGORITHM=" + config.BOTTOMDETECTION_ALGORITHM,
-                "PARAMETER_minimum_range=" + config.BOTTOMDETECTION_PARAMETER_MINIMUM_RANGE,
-                "PARAMETER_offset=" + config.BOTTOMDETECTION_PARAMETER_OFFSET,
-                "PARAMETER_threshold_log_sv=" + config.BOTTOMDETECTION_PARAMETER_THRESHOLD_LOG_SV
+                "PARAMETER_minimum_range=" + str(config.BOTTOMDETECTION_PARAMETER_MINIMUM_RANGE),
+                "PARAMETER_offset=" + str(config.BOTTOMDETECTION_PARAMETER_OFFSET),
+                "PARAMETER_threshold_log_sv=" + str(config.BOTTOMDETECTION_PARAMETER_THRESHOLD_LOG_SV)
             ]
 
             if proceed:
@@ -285,13 +285,13 @@ class Pipeline:
                 "BOT_INPUT_NAME=" + self.bottomdetection_out_name,
                 "OUTPUT_NAME=" + self.integrator_out_name,
                 "WRITE_PNG=" + self.integrator_png_name,
-                "THRESHOLD=" + config.INTEGRATOR_THRESHOLD,
-                "MAIN_FREQ=" + config.INTEGRATOR_MAIN_FREQ,
-                "MAX_RANGE_SRC=" + config.INTEGRATOR_MAX_RANGE_SRC,
+                "THRESHOLD=" + str(config.INTEGRATOR_THRESHOLD),
+                "MAIN_FREQ=" + str(config.INTEGRATOR_MAIN_FREQ),
+                "MAX_RANGE_SRC=" + str(config.INTEGRATOR_MAX_RANGE_SRC),
                 "HOR_INTEGRATION_TYPE=" + config.INTEGRATOR_HOR_INTEGRATION_TYPE,
-                "HOR_INTEGRATION_STEP=" + config.INTEGRATOR_HOR_INTEGRATION_STEP,
+                "HOR_INTEGRATION_STEP=" + str(config.INTEGRATOR_HOR_INTEGRATION_STEP),
                 "VERT_INTEGRATION_TYPE=" + config.INTEGRATOR_VERT_INTEGRATION_TYPE,
-                "VERT_INTEGRATION_STEP=" + config.INTEGRATOR_VERT_INTEGRATION_STEP,
+                "VERT_INTEGRATION_STEP=" + str(config.INTEGRATOR_VERT_INTEGRATION_STEP)
             ]
 
             if proceed:
