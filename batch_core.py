@@ -134,17 +134,21 @@ class Pipeline:
         print(mount_list)
 
         if use_nvidia:
-            rt = "nvidia"
-        else:
-            rt = "docker"
-
-        container = self.client.containers.run(image_tag,
+            container = self.client.containers.run(image_tag,
                 detach = True,
                 auto_remove = True,
                 volumes=mount_list,
                 environment=environments,
-                runtime = rt,
-        )
+                runtime = "nvidia",
+            )
+        else:
+            container = self.client.containers.run(image_tag,
+                detach = True,
+                auto_remove = True,
+                volumes=mount_list,
+                environment=environments
+            )
+
         process = container.logs(stream=True, follow=True)
         print('Stream logging the container..')
         for line in process:
