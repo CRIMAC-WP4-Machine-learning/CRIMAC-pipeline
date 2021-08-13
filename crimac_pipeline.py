@@ -29,7 +29,7 @@ cruise_list = Pipeline.extract_cruise_series("cruiseseries.xml", 13)
 print(cruise_list)
 
 # Select a cruise
-selected_cruise = [cruise_list['2019']]
+selected_cruise = [cruise_list['2018']]
 
 # Select all cruises
 #selected_cruise = cruise_list.values()
@@ -49,5 +49,5 @@ for _, _, p in selected_cruise:
     pipeline.do_bottom_detection(p, prefix = None, algorithm = 'simple', grid_data_type = 'zarr')
 
 # Integration
-#for _, _, p in selected_cruise:
-#    pipeline.do_integration(
+for _, _, p in selected_cruise:
+    pipeline.do_integration(

@@ -309,6 +309,42 @@ class Pipeline:
         print("ERROR: Gridded data not found! Please do preprocessing first.")
         return False
 
+    def do_integration(self):
+	target = config.TARGET
+	prefix = self.gen_prefix(config.PREFIX, target)
+        print("\n\nTrying to do integration for " + str(target))
+        if (target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR).exists():
+            # Get extension
+            ext = self.get_ext_data_type(grid_data_type)
+            datain = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
+            dataout = target / config.FIRST_LEVEL_DIR / config.BOTTOM_DATA_DIR
+            in_name = prefix + "." + ext
+            out_name = str(prefix + "_pred_bottom.zarr")
+            target_file = dataout / out_name
+            self.check_create_dir(dataout)
+            proceed = self.check_overwrite_file(target_file, overwrite)
+            if proceed:
+                self.launch_bottom_classifier(str(datain), str(dataout), algorithm, in_name, out_name)
+                return True
+            return False
+        print("ERROR: Gridded data not found! Please do preprocessing first.")
+        return False
+
+
+        DATA_INPUT_NAME=input_filename.zarr
+	PRED_INPUT_NAME=prediction_filename.zarr
+	BOT_INPUT_NAME=bottom_filename.zarr
+	OUTPUT_NAME=result.zarr
+	WRITE_PNG=result.png
+	THRESHOLD=0.8
+	MAIN_FREQ = 38000
+	MAX_RANGE_SRC = 500
+	HOR_INTEGRATION_TYPE = ping
+	HOR_INTEGRATION_STEP = 100
+	VERT_INTEGRATION_TYPE=range
+	VERT_INTEGRATION_STEP=10
+
+
     def do_batch(self, cruise_list, prefix = None, grid_data_type = 'zarr', bottom_detection_algorithm = "simple", process_ek80 = False, overwrite = False):
         for year, cruise_no, ship_name, p in cruise_list:
             print("Starting batch processing of cruise " + prefix)
