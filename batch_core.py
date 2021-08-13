@@ -197,7 +197,7 @@ class Pipeline:
                 "OUTPUT_TYPE=" + config.PREPROCESSOR_OUT_TYPE,
                 "MAIN_FREQ=" + str(config.PREPROCESSOR_MAIN_FREQ),
                 "MAX_RANGE_SRC=" + str(config.PREPROCESSOR_MAX_RANGE_SRC),
-                "WRITE_PNG=" + config.PREPROCESSOR_IMAGE
+                "WRITE_PNG=" + config.PREPROCESSOR_WRITE_PNG
             ]
             if proceed:
                 self.launch_docker(image_tag, mount_list, environments)
@@ -311,8 +311,8 @@ class Pipeline:
         # Preprocessor
         self.preprocessor_out_dir = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
         self.preprocessor_out_ext = self.get_ext_data_type(config.PREPROCESSOR_OUT_TYPE)
-        self.preprocessor_out_name = str(prefix + "." + self.preprocessor_out_ext)
-        self.preprocessor_out_path = self.preprocessor_out_dir / self.preprocessor_out_name
+        self.preprocessor_out_name = prefix
+        self.preprocessor_out_path = self.preprocessor_out_dir / str(self.preprocessor_out_name + "." + self.preprocessor_out_ext)
 
         self.preprocessor_work_name = str(prefix + "_work.parquet")
         self.preprocessor_work_path = self.preprocessor_out_dir / self.preprocessor_work_name
