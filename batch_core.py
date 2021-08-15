@@ -70,7 +70,11 @@ class Pipeline:
             print("Using an existing output directory: " + str(target))
 
     @classmethod
-    def check_overwrite_file(cls, target_file, overwrite):
+    def check_overwrite_file(cls, target_file, overwrite_string):
+        if overwrite_string.tolower() == "yes":
+            overwrite = True
+        else:
+            overwrite = False
         target = Path(target_file)
         #print(target)
         if target.exists():
