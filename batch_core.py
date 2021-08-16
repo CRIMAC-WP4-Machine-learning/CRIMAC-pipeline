@@ -71,7 +71,7 @@ class Pipeline:
 
     @classmethod
     def check_overwrite_file(cls, target_file, overwrite_string):
-        if overwrite_string.tolower() == "yes":
+        if overwrite_string.lower() == "yes":
             overwrite = True
         else:
             overwrite = False
