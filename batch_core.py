@@ -73,7 +73,10 @@ class Pipeline:
     def check_overwrite_file(cls, target_file, overwrite_string):
         if overwrite_string.lower() == "yes":
             overwrite = True
+        elif overwrite_string.lower() == "no" or overwrite_string.lower() == "resume":
+            overwrite = False
         else:
+            print("Error in user input. Overwrite must be set to 'yes', 'no', or 'resume'. Falling back to 'no'.")
             overwrite = False
         target = Path(target_file)
         #print(target)
@@ -86,7 +89,11 @@ class Pipeline:
                     shutil.rmtree(target)
                 return True
             print("Not overwriting target: " + str(target))
-            return False
+            if overwrite_string.lower() == "resume":
+                print("Trying to resume the previous process...")
+                return True
+            else:
+                return False
         return True
 
     @classmethod

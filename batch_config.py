@@ -23,21 +23,21 @@ GLOBAL_PREFIX = None        # Specify prefix for the output names
 # Per-step Settings
 
 ## Preprocessor
-PREPROCESSOR_OVERWRITE     = 'resume'       # or yes or no
-PREPROCESSOR_OUT_TYPE      = 'zarr'          # or netcdf4
+PREPROCESSOR_OVERWRITE     = 'yes'      # or resume or no
+PREPROCESSOR_OUT_TYPE      = 'zarr'     # or netcdf4
 PREPROCESSOR_MAIN_FREQ     = 38000
 PREPROCESSOR_MAX_RANGE_SRC = 500
-PREPROCESSOR_WRITE_PNG     = 'no'           # or yes
-PREPROCESSOR_PROCESS_EK80  = True           # or False
+PREPROCESSOR_WRITE_PNG     = 'no'       # or yes
+PREPROCESSOR_PROCESS_EK80  = True       # or False
 
 ## Predictor
-PREDICTOR_OVERWRITE      = 'yes'             # or no
+PREDICTOR_OVERWRITE      = 'yes'        # or no
 PREDICTOR_OUT_TYPE       = 'zarr'
 PREDICTOR_MODEL_PATH     = "/scratch/disk2/AzureMirror/models/NR_Unet"
 PREDICTOR_USE_CUDA       = True
 
 ## Bottom detector
-BOTTOMDETECTION_OVERWRITE                  = 'yes'       # or no
+BOTTOMDETECTION_OVERWRITE                  = 'yes'        # or no
 BOTTOMDETECTION_ALGORITHM                  = 'simple'
 BOTTOMDETECTION_OUT_TYPE                   = 'zarr'       # or parquet
 BOTTOMDETECTION_PARAMETER_MINIMUM_RANGE    = 10.0
@@ -45,7 +45,7 @@ BOTTOMDETECTION_PARAMETER_OFFSET           = 0.5
 BOTTOMDETECTION_PARAMETER_THRESHOLD_LOG_SV = -31.0
 
 # Report generator / integrator
-INTEGRATOR_OVERWRITE             = 'yes'
+INTEGRATOR_OVERWRITE             = 'yes'    # or resume or no
 INTEGRATOR_OUT_TYPE              = 'zarr'
 INTEGRATOR_THRESHOLD             = 0.8
 INTEGRATOR_MAIN_FREQ             = 38000
