@@ -228,7 +228,7 @@ class Pipeline:
                 self.predictor_model_path: {'bind': '/model', 'mode': 'ro'}
             }
             environments = [
-                "OUTPUT_NAME=" + self.predictor_out_name,
+                "OUTPUT_NAME=" + self.preprocessor_out_name,
             ]
             if proceed:
                 self.launch_docker(image_tag, mount_list, environments, config.PREDICTOR_USE_CUDA)
@@ -253,7 +253,7 @@ class Pipeline:
             }
 
             environments = [
-                "INPUT_NAME=" + self.preprocessor_out_name,
+                "INPUT_NAME=" + self.preprocessor_out_name + "." + self.preprocessor_out_ext,
                 "OUTPUT_NAME=" + self.bottomdetection_out_name,
                 "ALGORITHM=" + config.BOTTOMDETECTION_ALGORITHM,
                 "PARAMETER_minimum_range=" + str(config.BOTTOMDETECTION_PARAMETER_MINIMUM_RANGE),
@@ -283,12 +283,12 @@ class Pipeline:
             mount_list = {
                 self.preprocessor_out_dir: {'bind': '/datain', 'mode': 'ro'},
                 self.predictor_out_dir: {'bind': '/predin', 'mode': 'ro'},
-                self.bottomdetection_out_dir: {'bind': '/botin', 'mode': 'ro'},
+                self.bottomdetection_out_dir: {'bind': '/bottomin', 'mode': 'ro'},
                 self.integrator_out_dir: {'bind': '/dataout', 'mode': 'rw'}
             }
 
             environments = [
-                "DATA_INPUT_NAME=" + self.preprocessor_out_name,
+                "DATA_INPUT_NAME=" + self.preprocessor_out_name + "." + self.preprocessor_out_ext,
                 "PRED_INPUT_NAME=" + self.predictor_out_name,
                 "BOT_INPUT_NAME=" + self.bottomdetection_out_name,
                 "OUTPUT_NAME=" + self.integrator_out_name,
