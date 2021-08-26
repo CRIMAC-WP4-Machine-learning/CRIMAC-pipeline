@@ -358,6 +358,12 @@ class Pipeline:
         # Init Docker
         self.client = docker.from_env()
 
+        # Download images
+        image_list = [config.PREPROCESSOR_IMAGE, config.PREDICTOR_IMAGE, config.BOTTOMDETECTION_IMAGE, config.INTEGRATOR_IMAGE]
+        for img in image_list:
+            print("Pulling the latest " + img + " image from docker hub...")
+            self.client.images.pull(img)
+
         # Init Paths
 
         # Preprocessor
