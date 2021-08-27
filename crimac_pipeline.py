@@ -21,6 +21,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 # Get the core functions
 from batch_core import Pipeline
+import batch_config as config
 
 # Get All sandeel surveys (code series 13)
 pipeline = Pipeline()
@@ -38,16 +39,24 @@ print(selected_cruise)
 
 # Preprocess data
 for _, _, p in selected_cruise:
-    pipeline.do_preprocessing(p, prefix = None, grid_data_type = 'zarr', process_ek80 = True)
+    prefix = pipeline.gen_prefix(config.GLOBAL_PREFIX, p)
+    pipeline.populate_paths(p, prefix)
+    pipeline.do_preprocessing(p)
 
 # U-net prediction
 for _, _, p in selected_cruise:
-    pipeline.do_prediction(p, prefix = None, grid_data_type = 'zarr')
+    prefix = pipeline.gen_prefix(config.GLOBAL_PREFIX, p)
+    pipeline.populate_paths(p, prefix)
+    pipeline.do_prediction(p)
 
 # Bottom classification
 for _, _, p in selected_cruise:
-    pipeline.do_bottom_detection(p, prefix = None, algorithm = 'simple', grid_data_type = 'zarr')
+    prefix = pipeline.gen_prefix(config.GLOBAL_PREFIX, p)
+    pipeline.populate_paths(p, prefix)
+    pipeline.do_bottom_detection(p)
 
 # Integration
-#for _, _, p in selected_cruise:
-#    pipeline.do_integration(
+for _, _, p in selected_cruise:
+    prefix = pipeline.gen_prefix(config.GLOBAL_PREFIX, p)
+    pipeline.populate_paths(p, prefix)
+    pipeline.do_integration(p)
