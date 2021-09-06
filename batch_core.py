@@ -102,7 +102,10 @@ class Pipeline:
         raw_type = None
         parent = Path(target_dir)
         # Get the raw data directory
-        raws = list(parent.glob("*/*/*_RAWDATA"))
+        if config.PROCESS_HI_DATA:
+            raws = list(parent.glob("*/*/*_RAWDATA"))
+        else:
+            raws = [target_dir]
         for raw in raws:
             raw_loc = PurePath(raw)
             # Get the relative path
@@ -168,8 +171,12 @@ class Pipeline:
     @classmethod
     def gen_prefix(cls, output_prefix, p):
         # Check if prefix none or "" get the cruise number as the output_prefix
+        # if processing HI data, or OUT if it's standalone
         if output_prefix is None or output_prefix == "":
-            prefix, _, _ = p.name.partition('_')
+            if config.PROCESS_HI_DATA:
+                prefix, _, _ = p.name.partition('_')
+            else:
+                prefix = "OUT"
         else:
             prefix = output_prefix
         return prefix
@@ -189,7 +196,7 @@ class Pipeline:
         if (target / raw_data['path']).exists():
             # Data input
             datain = target / raw_data['path']
-            datawork = target / config.FIRST_LEVEL_DIR / "LSSS" / "WORK"
+            datawork = self.preprocessor_in_work
 
             # Make necessary directory and whether to overwrite files
             self.check_create_dir(self.preprocessor_out_dir)
@@ -317,10 +324,18 @@ class Pipeline:
         return False
 
     def populate_paths(self, target, prefix):
+        # For standalone processing, don't use HI's directory structure
+        if config.PROCESS_HI_DATA:
+            path_prefix = target / config.FIRST_LEVEL_DIR
+            self.preprocessor_in_work = path_prefix / "LSSS" / "WORK"
+        else:
+            path_prefix = target.parent
+            self.preprocessor_in_work = config.SINGLE_WORK_DIR
+
         # Init directories and output files
 
         # Preprocessor
-        self.preprocessor_out_dir = target / config.FIRST_LEVEL_DIR / config.GRIDDED_DATA_DIR
+        self.preprocessor_out_dir = path_prefix / config.GRIDDED_DATA_DIR
         self.preprocessor_out_ext = self.get_ext_data_type(config.PREPROCESSOR_OUT_TYPE)
         self.preprocessor_out_name = prefix
         self.preprocessor_out_path = self.preprocessor_out_dir / str(self.preprocessor_out_name + "." + self.preprocessor_out_ext)
@@ -329,7 +344,7 @@ class Pipeline:
         self.preprocessor_work_path = self.preprocessor_out_dir / self.preprocessor_work_name
 
         # Bottom detection
-        self.bottomdetection_out_dir = target / config.FIRST_LEVEL_DIR / config.BOTTOM_DATA_DIR
+        self.bottomdetection_out_dir = path_prefix / config.BOTTOM_DATA_DIR
         self.bottomdetection_out_ext = self.get_ext_data_type(config.BOTTOMDETECTION_OUT_TYPE)
         self.bottomdetection_out_name = str(prefix + "_pred_bottom" + "." + self.bottomdetection_out_ext)
         self.bottomdetection_out_path = self.bottomdetection_out_dir / self.bottomdetection_out_name
@@ -337,13 +352,13 @@ class Pipeline:
         # Predictor
         self.predictor_model_path = config.PREDICTOR_MODEL_PATH
 
-        self.predictor_out_dir = target / config.FIRST_LEVEL_DIR / config.PREDICTOR_DATA_DIR
+        self.predictor_out_dir = path_prefix / config.PREDICTOR_DATA_DIR
         self.predictor_out_ext = self.get_ext_data_type(config.PREDICTOR_OUT_TYPE)
         self.predictor_out_name = str(prefix + "_pred" + "." + self.predictor_out_ext)
         self.predictor_out_path = self.predictor_out_dir / self.predictor_out_name
 
         # Integrator
-        self.integrator_out_dir = target / config.FIRST_LEVEL_DIR / config.INTEGRATOR_DATA_DIR
+        self.integrator_out_dir = path_prefix / config.INTEGRATOR_DATA_DIR
         self.integrator_out_ext = self.get_ext_data_type(config.INTEGRATOR_OUT_TYPE)
         self.integrator_out_name = str(prefix + "_report" + "." + self.integrator_out_ext)
         self.integrator_out_path = self.integrator_out_dir / self.integrator_out_name

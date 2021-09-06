@@ -1,6 +1,25 @@
-# Root directory for the cruises
-#ROOT_DIR = "/scratch/disk3/ibrahim-subset-2019/cruise_data"
+# CRIMAC PIPELINE CONFIG FILE #
+
+#
+# First, select the operation mode as either standalone processing
+# or HI cruise series processing
+#
+
+# For standalone processing, fill the below with another value than 'None'
+SINGLE_DATA_DIR = None # or raw data dir such as: /cruise_data/2019/S2019847_PEROS_3317/ACOUSTIC/EK60/EK60_RAWDATA"
+SINGLE_WORK_DIR = None # or work dir such as: "/cruise_data/2019/S2019847_PEROS_3317/ACOUSTIC/LSSS/WORK"
+
+# ...or HI's CRUISE SERIES:
+
+# Cruise series selector (e.g., 13 for Sandeel, as in cruiseseries.xml file)
+CRUISE_SERIES_NUMBER = 13
+
+# Root directory for the cruise data
 ROOT_DIR = "/scratch/disk2/AzureMirror/cruise_data"
+
+#
+# Below values will apply to either standalone and cruise series processing #
+#
 
 # Important directories. Please note that we need to
 # define different directories for different output types
@@ -19,6 +38,7 @@ INTEGRATOR_IMAGE = 'crimac/reportgeneration'
 # Global settings
 GLOBAL_PREFIX = None        # Specify prefix for the output names
                             # None means we use the cruise number
+                            # or OUT for single cruise processing
 
 # Per-step Settings
 

@@ -19,21 +19,35 @@ along with this program; if not, write to the Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
 
+from pathlib import Path
+
 # Get the core functions
 from batch_core import Pipeline
 import batch_config as config
 
-# Get All sandeel surveys (code series 13)
+
 pipeline = Pipeline()
 
-cruise_list = Pipeline.extract_cruise_series("cruiseseries.xml", 13)
-print(cruise_list)
+if config.SINGLE_DATA_DIR is None:
+    # This means we process HI's data
+    config.PROCESS_HI_DATA = True
 
-# Select a cruise
-#selected_cruise = [cruise_list['2019']]
+    # Get All cruise series (by default using code 13 or Sandeel cruise, see config file)
+    cruise_list = Pipeline.extract_cruise_series("./cruiseseries.xml", config.CRUISE_SERIES_NUMBER)
+    print(cruise_list)
 
-# Select all cruises
-selected_cruise = cruise_list.values()
+    # Select a cruise
+    #selected_cruise = [cruise_list['2019']]
+
+    # Select all cruises
+    selected_cruise = cruise_list.values()
+else:
+    # Not processing HI's data (single input)
+    config.PROCESS_HI_DATA = False
+
+    # Use single cruise
+    selected_cruise = dict({'OUT': ['OUT', 'OUT', Path(config.SINGLE_DATA_DIR)]}).values()
+
 
 print(selected_cruise)
 
