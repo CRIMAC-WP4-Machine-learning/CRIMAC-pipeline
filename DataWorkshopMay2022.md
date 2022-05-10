@@ -76,14 +76,19 @@ Brautaset, O., Waldeland, A. U., Johnsen, E., Malde, K., Eikvil, L., Salberg, A.
 ## Part 1 - Reading data and exploring xarray
 
 -Reading and accessing the data
+
 -Short presentation of manual data annotations to layers and school boxes
+
 -Subsetting data based on annotations using xarray
 
 ## Part 2 - Setting up the u-net and train on test data
+
 -Short presentation of the U-net algorithm
+
 -Data loaders on top of xarray for pytorch
+
 -Setting up the u-net algorithm
 
-Set up data loaders and prepare the unet algorithm
+-Set up data loaders and prepare the unet algorithm
 
 ## Part 3 - Integration (probably for next workshop)
