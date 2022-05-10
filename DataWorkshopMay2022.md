@@ -39,8 +39,11 @@ https://www.docker.com/
 ## Download test data
 
 Download these test data sets:
+
 •	Testdata set (Sand eel, school boxes)
+
 •	Herring data (layers)
+
 •	Sand eel data (school boxes)
 
 The data should be organized according to the naming convention here:
@@ -83,3 +86,4 @@ Brautaset, O., Waldeland, A. U., Johnsen, E., Malde, K., Eikvil, L., Salberg, A.
 
 Set up data loaders and prepare the unet algorithm
 
+## Part 3 - Integration (probably for next workshop)
