@@ -39,12 +39,16 @@ https://www.docker.com/
 ## Download test data
 
 Download these test data sets:
+https://marineseq.hi.no/crimac/
 
 •	Testdata set (Sand eel, school boxes)
+https://marineseq.hi.no/crimac/files/data/S2019847_0511.zip
 
 •	Herring data (layers)
+https://marineseq.hi.no/crimac/files/data/S2019842.zip
 
 •	Sand eel data (school boxes)
+https://marineseq.hi.no/crimac/files/data/S2019847.zip
 
 The data should be organized according to the naming convention here:
 https://github.com/CRIMAC-WP4-Machine-learning/CRIMAC-data-organisation 
