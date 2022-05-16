@@ -75,7 +75,7 @@ We will use this network in the 2nd part of the WK:
 Brautaset, O., Waldeland, A. U., Johnsen, E., Malde, K., Eikvil, L., Salberg, A.-B., and Handegard, N. O. 2020. Acoustic classification in multifrequency echosounder data using deep convolutional neural networks. ICES Journal of Marine Science, 77: 1391–1400. https://academic.oup.com/icesjms/advance-article/doi/10.1093/icesjms/fsz235/5712978 (Accessed 29 January 2020).
 
 
-# (Suggested) program
+# Program
 
 ## Part 1 - Reading data and exploring xarray
 
@@ -87,12 +87,16 @@ Brautaset, O., Waldeland, A. U., Johnsen, E., Malde, K., Eikvil, L., Salberg, A.
 
 ## Part 2 - Setting up the u-net and train on test data
 
--Short presentation of the U-net algorithm
+### Short presentation of the U-net algorithm
 
--Data loaders on top of xarray for pytorch
+### Get the U-net code
 
--Setting up the u-net algorithm
+`git clone https://github.com/CRIMAC-WP4-Machine-learning/CRIMAC-classifiers-unet`
 
--Set up data loaders and prepare the unet algorithm
+The code is stored under the `NR_UNet` branch
+
+`git checkout NR_UNet`
+
+Now we should have a local copy of the code.
 
 ## Part 3 - Integration (probably for next workshop)
