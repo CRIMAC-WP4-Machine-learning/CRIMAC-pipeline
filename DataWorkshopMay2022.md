@@ -4,7 +4,11 @@ May 18th 2022 09:00 at meeting room Pynten, Nordnes, Bergen.
 
 https://goo.gl/maps/yoD4gRDQ5pktXNbx7
 
+The objecetive of the workshop is to read preprocessed acoustic data and add to use the files in pytorch.
+
 # Preparations
+
+To avoid spending time on the logistics you need to do the following preparations for the workshop.
 
 ## Software
 
@@ -26,10 +30,15 @@ https://github.com/CRIMAC-WP4-Machine-learning/CRIMAC-data-organisation
 
 Install python on your local computer.
 
-Install these packages:
-conda install -c plotly pandas ipywidgets xarray zarr datashader pyarrow fastparquet matplotlib pytorch
+Install these python packages:
 
-conda install -c pyviz holoviews bokeh
+xarray, pandas, os, zarr, matplotlib, holoviews, datashader, bokeh, torch, dask, numcodecs, PyYAML, sklearn, scipy, pyarrow 
+
+Here is how to install pytorch:
+https://pytorch.org/
+
+For the U-net code you need at least the vesrion number as noted here:
+https://github.com/CRIMAC-WP4-Machine-learning/CRIMAC-classifiers-unet/blob/master/requirements.min.txt
 
 ### Docker
 
@@ -73,6 +82,12 @@ https://github.com/CRIMAC-WP4-Machine-learning/CRIMAC-Visualization
 ### Papers to read
 We will use this network in the 2nd part of the WK:
 Brautaset, O., Waldeland, A. U., Johnsen, E., Malde, K., Eikvil, L., Salberg, A.-B., and Handegard, N. O. 2020. Acoustic classification in multifrequency echosounder data using deep convolutional neural networks. ICES Journal of Marine Science, 77: 1391–1400. https://academic.oup.com/icesjms/advance-article/doi/10.1093/icesjms/fsz235/5712978 (Accessed 29 January 2020).
+
+## Test
+If you are able to run this code snippet in your favorite IDE (change the file location) we will have a good starting point:
+
+https://github.com/CRIMAC-WP4-Machine-learning/CRIMAC-pipeline/blob/main/DataWorkshopMay2022/script1.py
+
 
 
 # Program
