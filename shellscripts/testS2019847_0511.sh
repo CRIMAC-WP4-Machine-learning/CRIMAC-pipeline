@@ -5,16 +5,16 @@
 #export DATAOUT='/mnt/c/DATAscratch/crimac-scratch/2019/S2019847_0511/'
 export DATAIN='/localscratch_hdd/crimac/2019/S2019847_0511/'
 export DATAOUT='/localscratch_hdd/nilsolav/2019/S2019847_0511/'
+export MODEL='/localscratch_hdd/nilsolav/modelweights/'
 
 export SURVEY='S2019847_0511' # Assume that ${SURVEY}_sv file exit
+export MODELFILE='regriddingPaper_v1_baseline.pt'
 
 export PREDICTIONFILE_1=${SURVEY}_labels.zarr
 export REPORTFILE_1=${SURVEY}_report_1.zarr
 export PREDICTIONFILE_2=${SURVEY}_predictions_2.zarr
 export REPORTFILE_2=${SURVEY}_report_2.zarr
 
-export MODEL='/mnt/c/DATAscratch/crimac-scratch/NR_Unet'
-export MODELFILE='paper_v2_heave_2.pt'
 
 # Static variables for report genertor
 export PING_AXIS_INTERVAL_TYPE="distance"  # see http://vocab.ices.dk/?ref=1455
