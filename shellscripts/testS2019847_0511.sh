@@ -39,7 +39,7 @@ docker run  -it --rm --name unet \
        --security-opt label=disable \
        --env MODEL=$MODELFILE \
        --env SURVEY=$SURVEY \
-       --env ZARRFILE=$PREDICTIONFILE \
+       --env ZARRFILE=$PREDICTIONFILE_2 \
        unet:latest
 
 # Sand eel test set work file reportgenerator
