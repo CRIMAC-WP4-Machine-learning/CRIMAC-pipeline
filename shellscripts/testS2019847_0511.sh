@@ -50,7 +50,7 @@ docker run  -it --rm --name unet \
        --env MODEL=$MODELFILE \
        --env SURVEY=$SURVEY \
        --env ZARRFILE=$PREDICTIONFILE_2 \
-       crimac/unet:latest
+       unet:latest
 
 # Sand eel test set work file reportgenerator
 docker run -it --rm --name reportgenerator \
