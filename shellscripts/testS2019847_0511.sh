@@ -1,11 +1,22 @@
 #!/bin/bash
 # This code runs the testing of the pipeline on the S2019847_0511 data set on Pallas
 # 
-#export DATAIN='/mnt/c/DATAscratch/crimac-scratch/2019/S2019847_0511/'
-#export DATAOUT='/mnt/c/DATAscratch/crimac-scratch/2019/S2019847_0511/'
-export DATAIN='/localscratch_hdd/crimac/2019/S2019847_0511/'
-export DATAOUT='/localscratch_hdd/nilsolav/2019/S2019847_0511/'
-export MODEL='/localscratch_hdd/nilsolav/modelweights/'
+
+VAR1="HI-14667"
+VAR2=$(hostname)
+
+if [ "$VAR1" = "$VAR2" ]; then
+    echo "HI-14667 setup"
+    export DATAIN='/mnt/c/DATAscratch/crimac-scratch/2019/S2019847_0511/'
+    export DATAOUT='/mnt/c/DATAscratch/crimac-scratch/2019/S2019847_0511/'
+    export MODEL='/mnt/c/DATAscratch/crimac-scratch/NR_Unet/'
+
+else
+    echo "pallas setup"
+    export DATAIN='/localscratch_hdd/crimac/2019/S2019847_0511/'
+    export DATAOUT='/localscratch_hdd/nilsolav/2019/S2019847_0511/'
+    export MODEL='/localscratch_hdd/nilsolav/modelweights/'
+fi
 
 export SURVEY='S2019847_0511' # Assume that ${SURVEY}_sv file exit
 export MODELFILE='regriddingPaper_v1_baseline.pt'
@@ -14,7 +25,6 @@ export PREDICTIONFILE_1=${SURVEY}_labels.zarr
 export REPORTFILE_1=${SURVEY}_report_1.zarr
 export PREDICTIONFILE_2=${SURVEY}_predictions_2.zarr
 export REPORTFILE_2=${SURVEY}_report_2.zarr
-
 
 # Static variables for report genertor
 export PING_AXIS_INTERVAL_TYPE="distance"  # see http://vocab.ices.dk/?ref=1455
@@ -39,8 +49,8 @@ docker run  -it --rm --name unet \
        --security-opt label=disable \
        --env MODEL=$MODELFILE \
        --env SURVEY=$SURVEY \
-       --env ZARRFILE=$PREDICTIONFILE \
-       unet:latest
+       --env ZARRFILE=$PREDICTIONFILE_2 \
+       crimac/unet:latest
 
 # Sand eel test set work file reportgenerator
 docker run -it --rm --name reportgenerator \
@@ -61,7 +71,7 @@ docker run -it --rm --name reportgenerator \
        --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
        --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
        --env OUTPUT_TYPE=$OUTPUT_TYPE\
-       reportgeneration:latest
+       crimac/reportgeneration:latest
 
 # Sand eel test set Unet reportgenerator
 docker run -it --rm --name reportgenerator \
@@ -82,4 +92,4 @@ docker run -it --rm --name reportgenerator \
        --env CHANNEL_TYPE=$CHANNEL_TYPE \
        --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
        --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
-       reportgeneration:latest
+       crimac/reportgeneration:latest
