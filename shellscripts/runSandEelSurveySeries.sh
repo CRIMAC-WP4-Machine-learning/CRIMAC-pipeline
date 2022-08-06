@@ -112,7 +112,7 @@ function run_survey() {
 	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
 	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
 	   --env OUTPUT_TYPE=$OUTPUT_TYPE\
-	   crimac/reportgeneration:latest
+	   reportgeneration:latest
     echo
     echo Unet reportgenerator:
     docker run -it --rm --name reportgenerator \
@@ -133,7 +133,7 @@ function run_survey() {
 	   --env CHANNEL_TYPE=$CHANNEL_TYPE \
 	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
 	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
-	   crimac/reportgeneration:latest
+	   reportgeneration:latest
 }
 
 # Run the testsurvey
@@ -143,70 +143,70 @@ run_survey
 
 # Run the sand eel series
 YEAR='2005'
-SURVEY='2005205'
+SURVEY='S2005205'
 run_survey
 
 YEAR='2006'
-SURVEY='2006207'
+SURVEY='S2006207'
 run_survey
 
 YEAR='2007'
-SURVEY='2007205'
+SURVEY='S2007205'
 run_survey
 
 YEAR='2008'
-SURVEY='2008205'
+SURVEY='S2008205'
 run_survey
 
 YEAR='2009'
-SURVEY='2009107'
+SURVEY='S2009107'
 run_survey
 
 YEAR='2010'
-SURVEY='2010205'
+SURVEY='S2010205'
 run_survey
 
 YEAR='2011'
-SURVEY='2011206'
+SURVEY='S2011206'
 run_survey
 
 YEAR='2012'
-SURVEY='2012837'
+SURVEY='S2012837'
 run_survey
 
 YEAR='2013'
-SURVEY='2013842'
+SURVEY='S2013842'
 run_survey
 YEAR='2014'
-SURVEY='2014807'
+SURVEY='S2014807'
 run_survey
 
 YEAR='2015'
-SURVEY='2015837'
+SURVEY='S2015837'
 run_survey
 
 YEAR='2016'
-SURVEY='2016837'
+SURVEY='S2016837'
 run_survey
 
 YEAR='2017'
-SURVEY='2017843'
+SURVEY='S2017843'
 run_survey
 
 YEAR='2018'
-SURVEY='2018823'
+SURVEY='S2018823'
 run_survey
 
 YEAR='2019'
-SURVEY='2019847'
+SURVEY='S2019847'
 run_survey
 
 YEAR='2020'
-SURVEY='2020821'
+SURVEY='S2020821'
 run_survey
 
 YEAR='2021'
-SURVEY='2021847'
+SURVEY='S2021847'
 run_survey
 
 #YEAR='2022'
