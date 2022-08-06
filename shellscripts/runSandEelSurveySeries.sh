@@ -1,13 +1,15 @@
 #!/bin/bash
-# This code runs the sand eel survey predictions
-# 
-
+echo -------------------------------
+echo This code runs the sand eel survey predictions
+echo -------------------------------
+echo
 # https://codefather.tech/blog/bash-functions/
-
-
 HST=$(hostname)
+echo -------------------------------
+echo Unet model
+echo -------------------------------
 MODELFILE='regriddingPaper_v1_baseline.pt'
-
+echo MODELFILE: $MODELFILE
 echo
 echo -------------------------------
 echo Static variables for report genertor
@@ -140,10 +142,6 @@ YEAR='2019'
 run_survey
 
 # Run the sand eel series
-SURVEY='S2019847'
-YEAR='2019'
-run_survey
-
 YEAR='2005'
 SURVEY='2005205'
 run_survey
@@ -205,15 +203,11 @@ run_survey
 
 YEAR='2020'
 SURVEY='2020821'
-
 run_survey
+
 YEAR='2021'
 SURVEY='2021847'
-
 run_survey
+
 #YEAR='2022'
-#SURVEY='2021847'
-
-
-
-
+#SURVEY='2022xxx'
