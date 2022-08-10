@@ -1,15 +1,10 @@
 #!/bin/bash
 echo -------------------------------
-echo This code runs the sand eel survey predictions
+echo This code runs the sand eel survey reports
 echo -------------------------------
 echo
 # https://codefather.tech/blog/bash-functions/
 HST=$(hostname)
-echo -------------------------------
-echo Unet model
-echo -------------------------------
-MODELFILE='regriddingPaper_v1_baseline.pt'
-echo MODELFILE: $MODELFILE
 echo
 echo -------------------------------
 echo Static variables for report genertor
@@ -46,10 +41,6 @@ echo OUTPUT_TYPE______________: $OUTPUT_TYPE
 
 
 function run_survey() {
-    #HST=$1
-    #MODELFILE=$2
-    #SURVEY=$3
-    #YEAR=$4
     echo
     echo -------------------------------
     VAR1="HI-14667"
@@ -57,20 +48,16 @@ function run_survey() {
 	echo Running survey $SURVEY "HI-14667 setup:"
 	DATAIN='/mnt/c/DATAscratch/crimac-scratch/'$YEAR'/'$SURVEY'/'
 	DATAOUT='/mnt/c/DATAscratch/crimac-scratch/'$YEAR'/'$SURVEY'/'
-	MODEL='/mnt/c/DATAscratch/crimac-scratch/NR_Unet/'
-	
     else
 	echo Running survey $SURVEY "pallas setup:"
 	DATAIN='/localscratch_hdd/crimac/'$YEAR'/'$SURVEY'/'
 	DATAOUT='/localscratch_hdd/nilsolav/'$YEAR'/'$SURVEY'/'
-	MODEL='/localscratch_hdd/nilsolav/modelweights/'
     fi
     echo -------------------------------
     echo
     echo Folders:
     echo Datain__: $DATAIN
     echo Dataout_: $DATAOUT
-    echo Model___: $MODEL
 
     PREDICTIONFILE_1=${SURVEY}_labels.zarr
     REPORTFILE_1=${SURVEY}_report_1.zarr
@@ -83,15 +70,6 @@ function run_survey() {
     echo Unet preditions:____________: $PREDICTIONFILE_2
     echo Report from Unet predictions: $REPORTFILE_2
     echo
-    echo Unet predictions:
-    docker run  -it --rm --name unet \
-	       -v "${DATAIN}":/datain \
-	       -v "${MODEL}":/model -v "${DATAOUT}/ACOUSTIC/PREDICTIONS/":/dataout \
-	       --security-opt label=disable \
-	       --env MODEL=$MODELFILE \
-	       --env SURVEY=$SURVEY \
-	       --env ZARRFILE=$PREDICTIONFILE_2 \
-	       unet:latest
     echo
     echo LSSS work file reportgenerator:
     docker run -it --rm --name reportgenerator \
@@ -112,7 +90,7 @@ function run_survey() {
 	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
 	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
 	   --env OUTPUT_TYPE=$OUTPUT_TYPE\
-	   reportgeneration:latest
+	   reportgenerator:latest
     echo
     echo Unet reportgenerator:
     docker run -it --rm --name reportgenerator \
@@ -133,7 +111,7 @@ function run_survey() {
 	   --env CHANNEL_TYPE=$CHANNEL_TYPE \
 	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
 	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
-	   reportgeneration:latest
+	   reportgenerator:latest
 }
 
 # Run the testsurvey
@@ -142,14 +120,6 @@ YEAR='2019'
 run_survey
 
 # Run the sand eel series
-YEAR='2005'
-SURVEY='S2005205'
-run_survey
-
-YEAR='2006'
-SURVEY='S2006207'
-run_survey
-
 YEAR='2007'
 SURVEY='S2007205'
 run_survey
