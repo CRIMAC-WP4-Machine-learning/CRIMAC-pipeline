@@ -54,11 +54,6 @@ function run_survey() {
 	DATAOUT='/localscratch_hdd/nilsolav/'$YEAR'/'$SURVEY'/'
     fi
     echo -------------------------------
-    echo
-    echo Folders:
-    echo Datain__: $DATAIN
-    echo Dataout_: $DATAOUT
-
     PREDICTIONFILE_1=${SURVEY}_labels.zarr
     REPORTFILE_1=${SURVEY}_report_1.zarr
     PREDICTIONFILE_2=${SURVEY}_predictions_2.zarr
@@ -67,13 +62,22 @@ function run_survey() {
     echo Files:
     echo LSSS labels:________________: $PREDICTIONFILE_1
     echo Report from LSSS labels_____: $REPORTFILE_1
-    echo Unet preditions:____________: $PREDICTIONFILE_2
-    echo Report from Unet predictions: $REPORTFILE_2
+    echo
+    echo -------------------------------
+    echo UNET report generation on survey: $SURVEY 
+    echo -------------------------------
+    echo
+
+    echo Inputdata:
+    echo Raw data (Sv)_____: ${DATAIN}/ACOUSTIC/GRIDDED/
+    echo Unet predictions__: ${DATAOUT}/ACOUSTIC/PREDICTIONS/${PREDICTIONFILE_2}
+    echo Reports___________: ${DATAOUT}/ACOUSTIC/REPORTS/${REPORTFILE_2}
+
     echo
     echo Unet reportgeneration:
     docker run -it --rm --name reportgeneration \
 	   -v "${DATAIN}/ACOUSTIC/GRIDDED":/datain \
-	   -v "${DATAIN}/ACOUSTIC/PREDICTIONS":/predin \
+	   -v "${DATAOUT}/ACOUSTIC/PREDICTIONS":/predin \
 	   -v "${DATAOUT}/ACOUSTIC/REPORTS"/:/dataout \
 	   --security-opt label=disable \
 	   --env SURVEY=$SURVEY \
@@ -91,7 +95,15 @@ function run_survey() {
 	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
 	   reportgeneration:latest
     echo
-    echo LSSS work file reportgeneration:
+    echo -------------------------------
+    echo LSSS work file reportgeneration on survey: $SURVEY 
+    echo -------------------------------
+    echo
+    echo Inputdata:
+    echo Raw data (Sv)_____: ${DATAIN}/ACOUSTIC/GRIDDED/
+    echo Unet predictions__: ${DATAIN}/ACOUSTIC/PREDICTIONS/${PREDICTIONFILE_1}
+    echo Reports___________: ${DATAOUT}/ACOUSTIC/REPORTS/${REPORTFILE_1}
+
     docker run -it --rm --name reportgeneration \
 	   -v "${DATAIN}ACOUSTIC/GRIDDED":/datain \
 	   -v "${DATAIN}ACOUSTIC/GRIDDED":/predin \
