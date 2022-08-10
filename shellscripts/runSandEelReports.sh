@@ -70,8 +70,8 @@ function run_survey() {
     echo Unet preditions:____________: $PREDICTIONFILE_2
     echo Report from Unet predictions: $REPORTFILE_2
     echo
-    echo Unet reportgenerator:
-    docker run -it --rm --name reportgenerator \
+    echo Unet reportgeneration:
+    docker run -it --rm --name reportgeneration \
 	   -v "${DATAIN}/ACOUSTIC/GRIDDED":/datain \
 	   -v "${DATAIN}/ACOUSTIC/PREDICTIONS":/predin \
 	   -v "${DATAOUT}/ACOUSTIC/REPORTS"/:/dataout \
@@ -89,10 +89,10 @@ function run_survey() {
 	   --env CHANNEL_TYPE=$CHANNEL_TYPE \
 	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
 	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
-	   reportgenerator:latest
+	   reportgeneration:latest
     echo
-    echo LSSS work file reportgenerator:
-    docker run -it --rm --name reportgenerator \
+    echo LSSS work file reportgeneration:
+    docker run -it --rm --name reportgeneration \
 	   -v "${DATAIN}ACOUSTIC/GRIDDED":/datain \
 	   -v "${DATAIN}ACOUSTIC/GRIDDED":/predin \
 	   -v "${DATAOUT}ACOUSTIC/REPORTS"/:/dataout \
@@ -110,7 +110,7 @@ function run_survey() {
 	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
 	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
 	   --env OUTPUT_TYPE=$OUTPUT_TYPE\
-	   reportgenerator:latest
+	   reportgeneration:latest
     echo
 }
 
