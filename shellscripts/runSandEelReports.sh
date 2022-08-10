@@ -70,6 +70,26 @@ function run_survey() {
     echo Unet preditions:____________: $PREDICTIONFILE_2
     echo Report from Unet predictions: $REPORTFILE_2
     echo
+    echo Unet reportgenerator:
+    docker run -it --rm --name reportgenerator \
+	   -v "${DATAIN}/ACOUSTIC/GRIDDED":/datain \
+	   -v "${DATAIN}/ACOUSTIC/PREDICTIONS":/predin \
+	   -v "${DATAOUT}/ACOUSTIC/REPORTS"/:/dataout \
+	   --security-opt label=disable \
+	   --env SURVEY=$SURVEY \
+	   --env PREDICTIONFILE=$PREDICTIONFILE_2 \
+	   --env REPORTFILE=$REPORTFILE_2 \
+	   --env THRESHOLD=$THRESHOLD \
+	   --env CLASSTRHRESHOLD=$CLASSTRHRESHOLD \
+	   --env PING_AXIS_INTERVAL_TYPE=$PING_AXIS_INTERVAL_TYPE \
+	   --env PING_AXIS_INTERVAL_ORIGIN=$PING_AXIS_INTERVAL_ORIGIN \
+	   --env PING_AXIS_INTERVAL_UNIT=$PING_AXIS_INTERVAL_UNIT \
+	   --env PING_AXIS_INTERVAL=$PING_AXIS_INTERVAL \
+	   --env CHANNEL_THICKNESS=$CHANNEL_THICKNESS \
+	   --env CHANNEL_TYPE=$CHANNEL_TYPE \
+	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
+	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
+	   reportgenerator:latest
     echo
     echo LSSS work file reportgenerator:
     docker run -it --rm --name reportgenerator \
@@ -92,26 +112,6 @@ function run_survey() {
 	   --env OUTPUT_TYPE=$OUTPUT_TYPE\
 	   reportgenerator:latest
     echo
-    echo Unet reportgenerator:
-    docker run -it --rm --name reportgenerator \
-	   -v "${DATAIN}/ACOUSTIC/GRIDDED":/datain \
-	   -v "${DATAIN}/ACOUSTIC/PREDICTIONS":/predin \
-	   -v "${DATAOUT}/ACOUSTIC/REPORTS"/:/dataout \
-	   --security-opt label=disable \
-	   --env SURVEY=$SURVEY \
-	   --env PREDICTIONFILE=$PREDICTIONFILE_2 \
-	   --env REPORTFILE=$REPORTFILE_2 \
-	   --env THRESHOLD=$THRESHOLD \
-	   --env CLASSTRHRESHOLD=$CLASSTRHRESHOLD \
-	   --env PING_AXIS_INTERVAL_TYPE=$PING_AXIS_INTERVAL_TYPE \
-	   --env PING_AXIS_INTERVAL_ORIGIN=$PING_AXIS_INTERVAL_ORIGIN \
-	   --env PING_AXIS_INTERVAL_UNIT=$PING_AXIS_INTERVAL_UNIT \
-	   --env PING_AXIS_INTERVAL=$PING_AXIS_INTERVAL \
-	   --env CHANNEL_THICKNESS=$CHANNEL_THICKNESS \
-	   --env CHANNEL_TYPE=$CHANNEL_TYPE \
-	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
-	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
-	   reportgenerator:latest
 }
 
 # Run the testsurvey
