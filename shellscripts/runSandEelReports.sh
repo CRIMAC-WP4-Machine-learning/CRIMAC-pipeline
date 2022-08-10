@@ -69,9 +69,9 @@ function run_survey() {
     echo
 
     echo Inputdata:
-    echo Raw data (Sv)_____: ${DATAIN}/ACOUSTIC/GRIDDED/
-    echo Unet predictions__: ${DATAOUT}/ACOUSTIC/PREDICTIONS/${PREDICTIONFILE_2}
-    echo Reports___________: ${DATAOUT}/ACOUSTIC/REPORTS/${REPORTFILE_2}
+    echo Raw data_________: ${DATAIN}/ACOUSTIC/GRIDDED/
+    echo Unet predictions_: ${DATAOUT}/ACOUSTIC/PREDICTIONS/${PREDICTIONFILE_2}
+    echo Reports__________: ${DATAOUT}/ACOUSTIC/REPORTS/${REPORTFILE_2}
 
     echo
     echo Unet reportgeneration:
@@ -100,9 +100,9 @@ function run_survey() {
     echo -------------------------------
     echo
     echo Inputdata:
-    echo Raw data (Sv)_____: ${DATAIN}/ACOUSTIC/GRIDDED/
-    echo Unet predictions__: ${DATAIN}/ACOUSTIC/PREDICTIONS/${PREDICTIONFILE_1}
-    echo Reports___________: ${DATAOUT}/ACOUSTIC/REPORTS/${REPORTFILE_1}
+    echo Raw data_________: ${DATAIN}/ACOUSTIC/GRIDDED/
+    echo Unet predictions_: ${DATAIN}/ACOUSTIC/PREDICTIONS/${PREDICTIONFILE_1}
+    echo Reports__________: ${DATAOUT}/ACOUSTIC/REPORTS/${REPORTFILE_1}
 
     docker run -it --rm --name reportgeneration \
 	   -v "${DATAIN}ACOUSTIC/GRIDDED":/datain \
