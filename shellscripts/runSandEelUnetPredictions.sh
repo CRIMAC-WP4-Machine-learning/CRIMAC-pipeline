@@ -38,7 +38,7 @@ function run_survey() {
     echo Unet preditions:____________: $PREDICTIONFILE_2
     echo
     echo Unet predictions:
-    docker run  -it --rm --name unet \
+    docker run  -it --rm --gpus all --name unet \
 	       -v "${DATAIN}":/datain \
 	       -v "${MODEL}":/model -v "${DATAOUT}/ACOUSTIC/PREDICTIONS/":/dataout \
 	       --security-opt label=disable \
