@@ -49,26 +49,17 @@ function run_survey() {
 }
 
 # Run the testsurvey
-#SURVEY='S2019847_0511'
-#YEAR='2019'
+SURVEY='S2019847_0511'
+YEAR='2019'
 #run_survey
-
-# Run the sand eel series
-YEAR='2005'
-SURVEY='S2005205'
-run_survey
-
-YEAR='2006'
-SURVEY='S2006207'
-run_survey
 
 YEAR='2007'
 SURVEY='S2007205'
-run_survey
+#run_survey
 
 YEAR='2008'
 SURVEY='S2008205'
-run_survey
+#run_survey
 
 YEAR='2009'
 SURVEY='S2009107'
