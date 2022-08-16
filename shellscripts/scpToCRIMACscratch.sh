@@ -2,9 +2,9 @@
 
 function move_predictions() {
     echo -------------------------------
-    echo This code runs the sand eel survey reports
+    echo Moves predicitons from ${SURVEY} 
     echo -------------------------------
-    echo scp -r /localscratch_hdd/nilsolav/${YEAR}/${SURVEY}/ACOUSTIC/PREDICTIONS/${SURVEY}_predictions_2.zarr nilsolav@dedun.hi.no:/data/crimac-scratch//${YEAR}/${SURVEY}/ACOUSTIC/PREDICTIONS/${SURVEY}_predictions_2.zarr
+    scp -r /localscratch_hdd/nilsolav/${YEAR}/${SURVEY}/ACOUSTIC/PREDICTIONS/${SURVEY}_predictions_2.zarr nilsolav@dedun.hi.no:/data/crimac-scratch//${YEAR}/${SURVEY}/ACOUSTIC/PREDICTIONS/${SURVEY}_predictions_2.zarr
 }
 
 YEAR='2007'
