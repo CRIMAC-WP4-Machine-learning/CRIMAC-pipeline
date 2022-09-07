@@ -98,10 +98,6 @@ PING_AXIS_INTERVAL_ORIGIN="middle"  # see http://vocab.ices.dk/?ref=1457
 echo PING_AXIS_INTERVAL_ORIGIN: $PING_AXIS_INTERVAL_ORIGIN
 run_survey
 
-PING_AXIS_INTERVAL_ORIGIN="end"  # see http://vocab.ices.dk/?ref=1457
-echo PING_AXIS_INTERVAL_ORIGIN: $PING_AXIS_INTERVAL_ORIGIN
-run_survey
-
 PING_AXIS_INTERVAL_ORIGIN="start"  # see http://vocab.ices.dk/?ref=1457
 echo PING_AXIS_INTERVAL_ORIGIN: $PING_AXIS_INTERVAL_ORIGIN
 run_survey
