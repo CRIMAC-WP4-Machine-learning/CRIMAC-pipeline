@@ -154,11 +154,11 @@ SURVEY='S2011206'
 
 YEAR='2012'
 SURVEY='S2012837'
-#run_survey
+run_survey
 
 YEAR='2013'
 SURVEY='S2013842'
-#run_survey
+run_survey
 
 YEAR='2014'
 SURVEY='S2014807'
