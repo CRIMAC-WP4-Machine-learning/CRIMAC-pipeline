@@ -129,28 +129,28 @@ function run_survey() {
 # Run the testsurvey
 SURVEY='S2019847_0511'
 YEAR='2019'
-#run_survey
+run_survey
 
 # Run the sand eel series
 YEAR='2007'
 SURVEY='S2007205'
-#run_survey
+run_survey
 
 YEAR='2008'
 SURVEY='S2008205'
-#run_survey
+run_survey
 
 YEAR='2009'
 SURVEY='S2009107'
-#run_survey
+run_survey
 
 YEAR='2010'
 SURVEY='S2010205'
-#run_survey
+run_survey
 
 YEAR='2011'
 SURVEY='S2011206'
-#run_survey
+run_survey
 
 YEAR='2012'
 SURVEY='S2012837'
@@ -162,19 +162,19 @@ run_survey
 
 YEAR='2014'
 SURVEY='S2014807'
-#run_survey
+run_survey
 
 YEAR='2015'
 SURVEY='S2015837'
-#run_survey
+run_survey
 
 YEAR='2016'
 SURVEY='S2016837'
-#run_survey
+run_survey
 
 YEAR='2017'
 SURVEY='S2017843'
-#run_survey
+run_survey
 
 YEAR='2018'
 SURVEY='S2018823'
@@ -182,15 +182,15 @@ run_survey
 
 YEAR='2019'
 SURVEY='S2019847'
-#run_survey
+run_survey
 
 YEAR='2020'
 SURVEY='S2020821'
-#run_survey
+run_survey
 
 YEAR='2021'
 SURVEY='S2021847'
-#run_survey
+run_survey
 
 #YEAR='2022'
 #SURVEY='2022xxx'
