@@ -75,25 +75,25 @@ function run_survey() {
 
     echo
     echo Unet reportgeneration:
-    docker run -it --rm --name reportgeneration \
-	   -v "${DATAIN}/ACOUSTIC/GRIDDED":/datain \
-	   -v "${DATAOUT}/ACOUSTIC/PREDICTIONS":/predin \
-	   -v "${DATAOUT}/ACOUSTIC/REPORTS"/:/dataout \
-	   --security-opt label=disable \
-	   --env SURVEY=$SURVEY \
-	   --env PREDICTIONFILE=$PREDICTIONFILE_2 \
-	   --env REPORTFILE=$REPORTFILE_2 \
-	   --env THRESHOLD=$THRESHOLD \
-	   --env CLASSTRHRESHOLD=$CLASSTRHRESHOLD \
-	   --env PING_AXIS_INTERVAL_TYPE=$PING_AXIS_INTERVAL_TYPE \
-	   --env PING_AXIS_INTERVAL_ORIGIN=$PING_AXIS_INTERVAL_ORIGIN \
-	   --env PING_AXIS_INTERVAL_UNIT=$PING_AXIS_INTERVAL_UNIT \
-	   --env PING_AXIS_INTERVAL=$PING_AXIS_INTERVAL \
-	   --env CHANNEL_THICKNESS=$CHANNEL_THICKNESS \
-	   --env CHANNEL_TYPE=$CHANNEL_TYPE \
-	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
-	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
-	   reportgeneration:latest
+#    docker run -it --rm --name reportgeneration \
+#	   -v "${DATAIN}/ACOUSTIC/GRIDDED":/datain \
+#	   -v "${DATAOUT}/ACOUSTIC/PREDICTIONS":/predin \
+#	   -v "${DATAOUT}/ACOUSTIC/REPORTS"/:/dataout \
+#	   --security-opt label=disable \
+#	   --env SURVEY=$SURVEY \
+#	   --env PREDICTIONFILE=$PREDICTIONFILE_2 \
+#	   --env REPORTFILE=$REPORTFILE_2 \
+#	   --env THRESHOLD=$THRESHOLD \
+#	   --env CLASSTRHRESHOLD=$CLASSTRHRESHOLD \
+#	   --env PING_AXIS_INTERVAL_TYPE=$PING_AXIS_INTERVAL_TYPE \
+#	   --env PING_AXIS_INTERVAL_ORIGIN=$PING_AXIS_INTERVAL_ORIGIN \
+#	   --env PING_AXIS_INTERVAL_UNIT=$PING_AXIS_INTERVAL_UNIT \
+#	   --env PING_AXIS_INTERVAL=$PING_AXIS_INTERVAL \
+#	   --env CHANNEL_THICKNESS=$CHANNEL_THICKNESS \
+#	   --env CHANNEL_TYPE=$CHANNEL_TYPE \
+#	   --env CHANNEL_DEPTH_START=$CHANNEL_DEPTH_START \
+#	   --env CHANNEL_DEPTH_END=$CHANNEL_DEPTH_END \
+#	   reportgeneration:latest
     echo
     echo -------------------------------
     echo LSSS work file reportgeneration on survey: $SURVEY 
