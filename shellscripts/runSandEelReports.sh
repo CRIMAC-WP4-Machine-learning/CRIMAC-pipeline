@@ -142,11 +142,11 @@ run_survey
 
 YEAR='2009'
 SURVEY='S2009107'
-run_survey
+#run_survey
 
 YEAR='2010'
 SURVEY='S2010205'
-run_survey
+#run_survey
 
 YEAR='2011'
 SURVEY='S2011206'
@@ -162,11 +162,11 @@ SURVEY='S2013842'
 
 YEAR='2014'
 SURVEY='S2014807'
-run_survey
+#run_survey
 
 YEAR='2015'
 SURVEY='S2015837'
-#run_survey
+run_survey
 
 YEAR='2016'
 SURVEY='S2016837'
