@@ -75,7 +75,7 @@ function run_survey() {
 
     echo
     echo Unet reportgeneration:
-#    docker run -it --rm --name reportgeneration \
+#    docker run -it --rm --entrypoint sh --name reportgeneration \
 #	   -v "${DATAIN}/ACOUSTIC/GRIDDED":/datain \
 #	   -v "${DATAOUT}/ACOUSTIC/PREDICTIONS":/predin \
 #	   -v "${DATAOUT}/ACOUSTIC/REPORTS"/:/dataout \
