@@ -104,7 +104,7 @@ function run_survey() {
     echo Unet predictions_: ${DATAIN}/ACOUSTIC/PREDICTIONS/${PREDICTIONFILE_1}
     echo Reports__________: ${DATAOUT}/ACOUSTIC/REPORTS/${REPORTFILE_1}
 
-    docker run -it --rm --entrypoint sh --name reportgeneration \
+    docker run -it --rm --name reportgeneration \
 	   -v "${DATAIN}ACOUSTIC/GRIDDED":/datain \
 	   -v "${DATAIN}ACOUSTIC/GRIDDED":/predin \
 	   -v "${DATAOUT}ACOUSTIC/REPORTS"/:/dataout \
